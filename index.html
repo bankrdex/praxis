@@ -580,7 +580,7 @@
   <p>Praxis is the first AI agent that can do everything on the Base blockchain — deploy contracts, trade tokens, send crypto, analyze data, and build entire apps. Just ask.</p>
   <div class="hero-btns">
     <a href="#" class="btn-primary">Start Building →</a>
-    <a href="https://github.com/bankrdex/Presdency" class="btn-secondary" target="_blank">GitHub ↗</a>
+    <a href="https://github.com/bankrdex/praxis" class="btn-secondary" target="_blank">GitHub ↗</a>
   </div>
 </section>
 
@@ -707,4 +707,92 @@
     </div>
     <div class="step">
       <div class="step-num">03</div>
-      <div class="step-title">Praxis 
+      <div class="step-title">Praxis Executes Onchain</div>
+      <div class="step-desc">Praxis handles all the complexity — writing code, optimizing gas, routing transactions — and executes on Base.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-title">You Stay in Control</div>
+      <div class="step-desc">Review every action before it happens. Praxis shows you exactly what it will do and waits for your approval.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title">Ready to Own Base?</h2>
+  <p class="cta-sub">Join the waitlist. Be first when Praxis launches.</p>
+  <div class="hero-btns" style="position: relative;">
+    <a href="https://github.com/bankrdex/praxis" class="btn-primary" target="_blank">View on GitHub →</a>
+    <a href="#" class="btn-secondary">Join Waitlist</a>
+  </div>
+  <div class="social-links">
+    <a href="https://x.com/PRESDENCY03" class="social-btn" target="_blank">🐦 Twitter / X</a>
+    <a href="https://farcaster.xyz/presdency.eth" class="social-btn" target="_blank">🟣 Farcaster</a>
+    <a href="https://base.app/profile/presdency.eth" class="social-btn" target="_blank">🔵 Base Profile</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">PR<span>AX</span>IS</div>
+  <div class="footer-text">© 2026 Praxis Protocol. Built on Base. 🇳🇬</div>
+  <ul class="footer-links">
+    <li><a href="https://github.com/bankrdex/praxis" target="_blank">GitHub</a></li>
+    <li><a href="https://x.com/PRESDENCY03" target="_blank">Twitter</a></li>
+    <li><a href="https://farcaster.xyz/presdency.eth" target="_blank">Farcaster</a></li>
+    <li><a href="https://base.app/profile/presdency.eth" target="_blank">Base</a></li>
+  </ul>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX - 6 + 'px';
+    cursor.style.top = mouseY - 6 + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX - 18) * 0.12;
+    ringY += (mouseY - ringY - 18) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      ring.style.transform = 'scale(1.5)';
+      ring.style.borderColor = 'rgba(0,212,255,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.transform = 'scale(1)';
+      ring.style.borderColor = 'rgba(0,212,255,0.4)';
+    });
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .step, .stat').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
