@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praxis — The Blockchain AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0052FF;
+    --cyan: #00D4FF;
+    --dark: #040810;
+    --darker: #020508;
+    --card: #080f1e;
+    --border: rgba(0, 82, 255, 0.2);
+    --text: #e8eeff;
+    --muted: #6b7fa3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--cyan);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0, 212, 255, 0.4);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,82,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,82,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(4,8,16,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+  }
+  .logo span { color: var(--cyan); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+
+  .nav-cta {
+    background: var(--blue);
+    color: #fff !important;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 13px !important;
+    letter-spacing: 1px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--cyan) !important; color: #000 !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,82,255,0.1);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-size: clamp(56px, 10vw, 120px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -4px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero h1 .line1 { display: block; color: #fff; }
+  .hero h1 .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    max-width: 600px;
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s 0.2s ease both;
+    font-weight: 400;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    padding: 16px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    border: 2px solid var(--blue);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--blue);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 16px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    border: 2px solid var(--border);
+    font-family: 'Space Mono', monospace;
+  }
+  .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* Glow orb */
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,82,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  }
+
+  /* STATS */
+  .stats {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat {
+    background: var(--dark);
+    padding: 48px 40px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-num span { color: var(--cyan); }
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+
+  /* FEATURES */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding: 120px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 64px;
+    max-width: 600px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .feature-card {
+    background: var(--card);
+    padding: 48px 40px;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .feature-card:hover { background: rgba(0,82,255,0.05); }
+  .feature-card:hover::before { transform: scaleX(1); }
+
+  .feature-icon {
+    font-size: 36px;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .feature-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+
+  .feature-desc {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* TERMINAL */
+  .terminal-section {
+    position: relative;
+    z-index: 1;
+    padding: 80px 40px 120px;
+    background: var(--darker);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .terminal-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .terminal {
+    background: #010408;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: left;
+    margin-top: 48px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 60px rgba(0,82,255,0.1);
+  }
+
+  .terminal-bar {
+    background: #0d1520;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .t-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .t-red { background: #ff5f57; }
+  .t-yellow { background: #ffbd2e; }
+  .t-green { background: #28c840; }
+  .t-title {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .terminal-body {
+    padding: 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .t-prompt { color: var(--cyan); }
+  .t-cmd { color: #fff; }
+  .t-output { color: var(--muted); }
+  .t-success { color: #28c840; }
+  .t-highlight { color: var(--cyan); }
+  .t-cursor {
+    display: inline-block;
+    width: 8px; height: 16px;
+    background: var(--cyan);
+    animation: blink 1s infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* HOW IT WORKS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 40px;
+    margin-top: 64px;
+  }
+
+  .step {
+    position: relative;
+    padding-left: 0;
+  }
+
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 72px;
+    font-weight: 700;
+    color: rgba(0,82,255,0.15);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .step-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* CTA */
+  .cta-section {
+    position: relative;
+    z-index: 1;
+    padding: 120px 40px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(0,82,255,0.1) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .cta-sub {
+    color: var(--muted);
+    font-size: 18px;
+    margin-bottom: 48px;
+    position: relative;
+    font-weight: 400;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .footer-logo span { color: var(--cyan); }
+
+  .footer-text {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--cyan); }
+  .social-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 24px; position: relative; }
+  .social-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,82,255,0.08); border: 1px solid var(--border);
+    padding: 10px 20px; border-radius: 4px;
+    color: var(--muted); text-decoration: none;
+    font-family: 'Space Mono', monospace; font-size: 12px;
+    transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .social-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,0.05); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    .stats { grid-template-columns: 1fr; }
+    .section { padding: 80px 20px; }
+    .terminal-section { padding: 60px 20px; }
+    .cta-section { padding: 80px 20px; }
+    footer { flex-direction: column; text-align: center; padding: 32px 20px; }
+    .features-grid { grid-template-columns: 1fr; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="logo">PR<span>AX</span>IS</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#docs">Docs</a></li>
+    <li><a href="#" class="nav-cta">Launch App</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Built on Base · Powered by AI
+  </div>
+  <h1>
+    <span class="line1">The AI That</span>
+    <span class="line2">Owns Base</span>
+  </h1>
+  <p>Praxis is the first AI agent that can do everything on the Base blockchain — deploy contracts, trade tokens, send crypto, analyze data, and build entire apps. Just ask.</p>
+  <div class="hero-btns">
+    <a href="#" class="btn-primary">Start Building →</a>
+    <a href="https://github.com/bankrdex/Presdency" class="btn-secondary" target="_blank">GitHub ↗</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num">1<span>AI</span></div>
+    <div class="stat-label">Infinite Possibilities</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num"><span>∞</span></div>
+    <div class="stat-label">Actions on Base</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">0<span>x</span></div>
+    <div class="stat-label">Code Required</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div id="features">
+  <section class="section">
+    <div class="section-label">// capabilities</div>
+    <h2 class="section-title">Everything Base. One AI.</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">🤖</span>
+        <div class="feature-title">AI-Powered Agent</div>
+        <div class="feature-desc">Talk to Praxis in plain English. It understands what you want and executes complex blockchain operations automatically on your behalf.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📜</span>
+        <div class="feature-title">Deploy Smart Contracts</div>
+        <div class="feature-desc">Describe your contract and Praxis writes, audits, and deploys it to Base in seconds. No Solidity experience needed.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📈</span>
+        <div class="feature-title">Autonomous Trading</div>
+        <div class="feature-desc">Set your strategy and let Praxis trade tokens automatically. Real-time market analysis with onchain execution on Base DEXes.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">💸</span>
+        <div class="feature-title">Send & Receive Crypto</div>
+        <div class="feature-desc">Transfer assets across Base with a single command. Praxis handles gas optimization, routing, and transaction confirmation.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔍</span>
+        <div class="feature-title">Blockchain Analytics</div>
+        <div class="feature-desc">Query and analyze any onchain data. Wallet histories, token flows, contract interactions — all explained in plain language.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🚀</span>
+        <div class="feature-title">Deploy Full Apps</div>
+        <div class="feature-desc">From idea to deployed dApp in minutes. Praxis builds, tests, and deploys entire Web3 applications on Base for you.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">👛</span>
+        <div class="feature-title">Built-in Coinbase Wallet</div>
+        <div class="feature-desc">Praxis comes with a native Coinbase Wallet SDK integration. No external wallet needed — create, manage and transact on Base directly inside Praxis.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TERMINAL -->
+<div class="terminal-section" id="how">
+  <div class="terminal-inner">
+    <div class="section-label">// demo</div>
+    <h2 class="section-title" style="margin: 0 auto; text-align: center;">See Praxis in Action</h2>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="t-dot t-red"></div>
+        <div class="t-dot t-yellow"></div>
+        <div class="t-dot t-green"></div>
+        <div class="t-title">praxis-terminal v1.0</div>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">user@praxis:~$ </span><span class="t-cmd">praxis wallet create</span></div>
+        <div class="t-output">⟳ Initializing Coinbase Wallet SDK...</div>
+        <div class="t-output">⟳ Generating Base wallet...</div>
+        <div class="t-success">✓ Wallet created on Base network!</div>
+        <div class="t-highlight">→ Address: 0x9f3a...d72e</div>
+        <div class="t-highlight">→ Network: Base Mainnet</div>
+        <div class="t-highlight">→ Powered by Coinbase Wallet SDK</div>
+        <br/>
+        <div class="t-output">⟳ Analyzing request...</div>
+        <div class="t-output">⟳ Writing ERC-20 contract...</div>
+        <div class="t-output">⟳ Running security audit...</div>
+        <div class="t-output">⟳ Deploying to Base Mainnet...</div>
+        <div class="t-success">✓ Contract deployed successfully!</div>
+        <div class="t-highlight">→ Address: 0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b</div>
+        <div class="t-highlight">→ Explorer: basescan.org/token/0x1a2b...</div>
+        <br/>
+        <div><span class="t-prompt">user@praxis:~$ </span><span class="t-cmd">praxis trade --buy ETH --amount 100 --strategy dca</span></div>
+        <div class="t-output">⟳ Analyzing market conditions...</div>
+        <div class="t-output">⟳ Finding best route on Base DEXes...</div>
+        <div class="t-success">✓ DCA strategy activated. Buying $100 ETH weekly.</div>
+        <br/>
+        <div><span class="t-prompt">user@praxis:~$ </span><span class="t-cmd">praxis analyze --wallet 0x742d...</span></div>
+        <div class="t-success">✓ Wallet holds 3.2 ETH, 1,500 USDC, 200 DEGEN</div>
+        <div class="t-highlight">→ 47 transactions in last 30 days</div>
+        <div class="t-highlight">→ Net PnL: +$1,240 USD</div>
+        <br/>
+        <div><span class="t-prompt">user@praxis:~$ </span><span class="t-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="docs">
+  <div class="section-label">// how it works</div>
+  <h2 class="section-title">Simple as Talking</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Connect Your Wallet</div>
+      <div class="step-desc">Link your Coinbase Wallet or MetaMask to Praxis. Your keys, your crypto — Praxis never holds your assets.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Tell Praxis What You Want</div>
+      <div class="step-desc">Type or speak your request in plain English. Deploy a contract, make a trade, build an app — anything on Base.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Praxis 
